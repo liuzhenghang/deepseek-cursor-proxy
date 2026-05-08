@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  deepseek-cursor-proxy:
+    build: .
+    container_name: deepseek-cursor-proxy
+    restart: unless-stopped
+    ports:
+      - "${HOST_PORT:-9000}:9000"
+    volumes:
+      # 持久化 reasoning SQLite 缓存；放 config.yaml 到此处也会自动加载
+      - ./data:/home/app/.deepseek-cursor-proxy
+    environment:
+      - TZ=Asia/Shanghai
+      # 以下所有环境变量都是可选的，不设则走 config.yaml 或代码默认值
+      - BASE_URL=${BASE_URL:-https://api.deepseek.com/v1}
+      - PROXY_PORT=9000
+      - VERBOSE=1
+      # - MODEL=deepseek-v4-pro
+      # - THINKING=enabled
+      # - REASONING_EFFORT=max
+      # - PROXY_HOST=0.0.0.0
+      # - CORS=1
+      # - DISPLAY_REASONING=1
+      # - COLLAPSIBLE_REASONING=1
+      # - REQUEST_TIMEOUT=300
+      # - MISSING_REASONING_STRATEGY=recover
+      # - TRACE_DIR=/home/app/.deepseek-cursor-proxy/traces
+      # - CONFIG_PATH=/home/app/.deepseek-cursor-proxy/config.yaml
+
+# 无需顶层 volumes 声明了
